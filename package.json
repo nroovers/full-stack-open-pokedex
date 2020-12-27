@@ -16,6 +16,9 @@
     "type": "git",
     "url": "git+https://github.com/smartlyio/fullstackopen-cicd.git"
   },
+  "jest": {
+    "modulePathIgnorePatterns": ["<rootDir>/cypress/"]
+  },
   "keywords": [
     "fullstack-open"
   ],
