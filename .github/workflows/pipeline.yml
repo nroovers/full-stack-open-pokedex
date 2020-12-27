@@ -35,3 +35,4 @@ jobs:
           heroku_email: "nroovers@gmail.com"
           healthcheck: "https://afternoon-bayou-62251.herokuapp.com/health"
           checkstring: "1"
+          rollbackonhealthcheckfailed: true
