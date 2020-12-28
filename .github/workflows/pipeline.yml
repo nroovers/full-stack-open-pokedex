@@ -1,15 +1,27 @@
 name: Deployment pipeline
 
-on:
+on: #event triggers
   push:
     branches:
       - master
+  pull_request:
+    branches: 
+      - master
+    types: 
+      - opened
+      - synchronize
 
-jobs:
+jobs: # jobs executed when event triggered
   simple_deployment_pipeline:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.33.0
+        if: ${{ github.event_name == 'push' }}  # if condition to prevent version bumps on pull request -> only on push (i.e. merge) after review of pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # provided to third-party action which need the token for authentication in your repository
+          DEFAULT_BUMP: patch
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
@@ -29,6 +41,7 @@ jobs:
           wait-on: http://localhost:5000
       - name: deploy
         uses: akhileshns/heroku-deploy@v3.8.8 # This is the action
+        if: ${{ github.event_name == 'push' }} # if condition to prevent deployment on pull request -> only on push (i.e. merge) after review of pull request
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "afternoon-bayou-62251" #Must be unique in Heroku
