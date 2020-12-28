@@ -19,7 +19,6 @@ jobs: # jobs executed when event triggered
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.33.0
         if: ${{ github.event_name == 'push' && !contains(env.COMMIT_MESSAGES, '#skip') }}  # if condition to prevent version bumps on pull request -> only on push (i.e. merge) after review of pull request
-                if: ${{  }}
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # provided to third-party action which need the token for authentication in your repository
