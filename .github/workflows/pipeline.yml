@@ -1,9 +1,9 @@
 name: Deployment pipeline
 
 on: #event triggers
-  # push:
-  #   branches:
-  #     - master
+  push:
+    branches:
+      - master
   pull_request:
     branches: 
       - master
@@ -18,8 +18,10 @@ jobs: # jobs executed when event triggered
       - uses: actions/checkout@v2
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.33.0
-        if: ${{ github.event_name == 'push' }}  # if condition to prevent version bumps on pull request -> only on push (i.e. merge) after review of pull request
+        if: ${{ github.event_name == 'push' && !contains(env.COMMIT_MESSAGES, '#skip') }}  # if condition to prevent version bumps on pull request -> only on push (i.e. merge) after review of pull request
+                if: ${{  }}
         env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # provided to third-party action which need the token for authentication in your repository
           DEFAULT_BUMP: patch
       - uses: actions/setup-node@v1
@@ -41,7 +43,9 @@ jobs: # jobs executed when event triggered
           wait-on: http://localhost:5000
       - name: deploy
         uses: akhileshns/heroku-deploy@v3.8.8 # This is the action
-        if: ${{ github.event_name == 'push' }} # if condition to prevent deployment on pull request -> only on push (i.e. merge) after review of pull request
+        if: ${{ github.event_name == 'push' && !contains(env.COMMIT_MESSAGES, '#skip') }} # if condition to prevent deployment on pull request -> only on push (i.e. merge) after review of pull request
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "afternoon-bayou-62251" #Must be unique in Heroku
