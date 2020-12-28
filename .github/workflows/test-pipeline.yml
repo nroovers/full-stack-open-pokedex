@@ -20,15 +20,11 @@ jobs:
         run: echo "$COMMITS"
       - name: commit messages
         env:
-          COMMIT_MESSAGES: ${{ join(toJson(github.event.commits.*.message)) }}
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ join(toJson(github.event.commits.*.message)) }}
         run: echo "contains skip"
-        if: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
+        if: ${{ contains(toJson(github.event.commits.*.message), '#skip') }}
       - name: commit messages
         run: echo "no skip"
-        if: ${{ !contains($COMMIT_MESSAGES, '#skip') }}
-        env:
-          COMMIT_MESSAGES: ${{ join(toJson(github.event.commits.*.message)) }}
+        if: ${{ !contains(toJson(github.event.commits.*.message), '#skip') }}
