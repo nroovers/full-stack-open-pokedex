@@ -33,8 +33,16 @@ jobs:
       - name: notification on success
         uses: 8398a7/action-slack@v3
         with:
-          status: ${{ job.status }}
-          text: 'a new version deployed to https://afternoon-bayou-62251.herokuapp.com (${{ env.AS_REF }}) by ${{ env.AS_AUTHOR }} build took ${{ env.AS_TOOK }}'
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            {
+              username: 'action-slack',
+              attachments: [{
+                color: 'good',
+                text: 'a new version deployed to https://afternoon-bayou-62251.herokuapp.com (${{ process.env.AS_REF }}) by ${{ process.env.AS_AUTHOR }} build took ${{ process.env.AS_TOOK }}'
+              }]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
         if: ${{ success() }}
