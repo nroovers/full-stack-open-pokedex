@@ -1,9 +1,9 @@
 name: Deployment pipeline
 
 on: #event triggers
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
   pull_request:
     branches: 
       - master
