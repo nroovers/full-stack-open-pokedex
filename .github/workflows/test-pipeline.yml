@@ -35,7 +35,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: workflow,job,commit,repo,ref,author,took
-          text: 'a new version deployed to https://afternoon-bayou-62251.herokuapp.com (${{ process.env.AS_REF }}) by ${{ process.env.AS_AUTHOR }} build took ${{ process.env.AS_TOOK }}'
+          text: 'a new version deployed to https://afternoon-bayou-62251.herokuapp.com (${{ env.AS_REF }}) by ${{ process.env.AS_AUTHOR }} build took ${{ process.env.AS_TOOK }}'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
         if: ${{ success() }}
