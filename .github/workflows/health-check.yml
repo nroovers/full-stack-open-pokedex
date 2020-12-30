@@ -3,7 +3,7 @@ name: Periodic health check
 on: workflow_dispatch
 
 jobs: # jobs executed when event triggered
-  a_test_job:
+  health-check-job:
     runs-on: ubuntu-18.04
     steps:
     - name: Check the deployed service URL
